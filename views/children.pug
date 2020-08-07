@@ -1,0 +1,60 @@
+extends layout
+
+block content
+    .container
+        h2 אישורים
+        .form-group
+            label(for='date') תאריך
+            input#date.form-control(name="date" type='date' required)
+        .form-group
+            label(for='group') קבוצה
+            select#group.form-control.custom-select(name="group" type='text' required)
+                option(value="" selected) לחץ לבחירה
+                each team in teams
+                    option(value="#{team}") #{team}
+        input#myInput.form-control(type='text' placeholder='חיפוש')
+        br
+        h5 סהכ ברשימה:&nbsp;
+            span#number 0
+        table.table.table-bordered.table-striped.table-sm
+            thead
+                tr
+                    th הילד/ה
+                    th קבוצה
+                    th ההורה
+                    th תאריך
+                    th מס׳ אישור
+            tbody#myTable
+                each val in approvals
+                    tr
+                        td #{val.child_name} #{val.child_id}
+                        td #{val.group}
+                        td #{val.parent_name}&nbsp;
+                            a(href="tel:+" + val.phone)  #{val.phone}
+                        td #{val.date}
+                        td #{val.id}
+    .container
+        a(href="/children-download") הורדת קובץ אקסל
+    script.
+        $(document).ready(function(){
+            $("#date").val(moment().format("YYYY-MM-DD"));
+            let filterList = function() {
+                var date = $("#date").val();
+                var group = $("#group").val();
+                var words = $('#myInput').val().toLowerCase().split(" ").concat([date, group]).filter(function(x) { return !!x});
+                $("#myTable tr").each(function() {
+                    let rowText = $(this).text().toLowerCase();
+                    var toggle = words.reduce(function(acc, word) {
+                        return acc && rowText.indexOf(word) > -1
+                    }, true);
+                    $(this).toggle(toggle)
+                });
+                let length = $("#myTable tr:visible").length;
+                $("#number").text(length)
+            };
+            filterList();
+            $("#myInput").on("keyup", filterList);
+            $("#group").on("change", filterList);
+            $("#date").on("change", filterList);
+
+        });

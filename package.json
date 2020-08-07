@@ -1,0 +1,29 @@
+{
+  "name": "children_health_approval",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node -r dotenv/config ./bin/www",
+    "debug": "nodemon -r dotenv/config ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "csv-stringify": "^5.5.0",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "express": "^4.16.4",
+    "express-jwt": "^5.3.3",
+    "express-jwt-authz": "^2.3.1",
+    "express-openid-connect": "^1.0.2",
+    "heroku-ssl-redirect": "0.0.4",
+    "http-errors": "~1.6.3",
+    "jwks-rsa": "^1.8.0",
+    "moment": "^2.26.0",
+    "mongoose": "^5.9.14",
+    "morgan": "~1.9.1",
+    "pug": "2.0.0-beta11",
+    "xlsx": "^0.16.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}

@@ -1,0 +1,56 @@
+extends layout
+
+block head
+  script.
+    function store(e) {
+      localStorage.setItem(e.target.id, JSON.stringify(e.target.value));
+    }
+    $(document).ready(function () {
+      $("#date1").val(moment().format("YYYY-MM-DD"));
+      $("#date2").val(moment().format("YYYY-MM-DD"));
+      ["child_name", "child_id", "group", "parent_name", "phone"].forEach(function (id) {
+        let value = localStorage.getItem(id);
+        value = value ? JSON.parse(value) : "";
+        document.getElementById(id).value = value;
+      });
+    });
+
+block content
+  .container
+    h1 הצהרת ההורה - #{name}
+    form#form(action="/submit" method="post")
+      .form-group
+        label(for='child_name') שם הילד/ה
+        input#child_name.form-control(name="child_name" type='text' onchange="store(event)" onkeypress="this.setCustomValidity(validity.valueMissing ? 'שם פרטי ומשפחה של הילד' : '')" minlength=4 required)
+      .form-group
+        label(for='child_id') תז הילד/ה
+        input#child_id.form-control(name="child_id" type='text' minlength="9" maxlength="9" required onchange="store(event);" pattern="\\d*")
+      .form-group
+        label(for='group') קבוצה
+        select#group.form-control.custom-select(name="group" type='text' oninvalid="this.setCustomValidity('xxxxxxxxxx')" onchange="store(event);this.setCustomValidity(validity.valueMissing ? 'xxxxxxxxxx' : '')" required)
+          option(value="" selected disabled hidden) לחץ לבחירה
+          each team in teams
+            option #{team}
+      .form-group
+        label(for='parent_name') שם ההורה
+        input#parent_name.form-control(name="parent_name" type='text' oninvalid="this.setCustomValidity('שם ההורה')" onchange="store(event);" onkeypress="this.setCustomValidity(validity.valueMissing ? 'שם ההורה' : '')" required minlength=4)
+      .form-group
+        label(for='phone') טלפון
+        input#phone.form-control(name="phone" type='tel' oninvalid="this.setCustomValidity('מס הטלפון של ההורה')" onchange="store(event);" onkeypress="this.setCustomValidity(validity.valueMissing ? 'מס הטלפון של ההורה' : '')" required pattern="[\\d|-]*" )
+      .form-group
+        label(for='temperature') חום הילד/ה כפי שנמדד בבוקר ההגעה לגן
+        input#temperature.form-control(name="temperature" type='number' step="0.1" oninvalid="this.setCustomValidity('חום הגוף (מספר מעל 36)')" onchange="store(event);" onkeypress="this.setCustomValidity(validity.valueMissing ? 'חום הגוף (מספר מעל 36)' : '')" required)
+      h4 אני מצהיר/ה בנוגע לילדי/ילדתי
+      ul
+        li מדדתי חום לילדי/ילדתי, ונמצא כי חום גופו/ה אינו עולה על 38 מעלות צלזיוס
+        li לילדי/ילדתי אין תסמיני קורונה (שיעול, קשיי נשימה או כל תסמין נשימתי אחר)
+        li ילדי/ילדתי לא נחשף/נחשפה לחולה קורונה או לאדם הנמצא בבידוד
+      .form-group.form-check-inline
+        input#approve1.form-check-input(type='checkbox' required oninvalid="this.setCustomValidity('אנא סמנו כאן כדאי לאשר')" onchange="this.setCustomValidity(validity.valueMissing ? 'אנא סמנו כאן כדאי לאשר' : '')")
+        label.form-check-label(for='approve1' style="padding: 0 5px") סמנו לאישור
+      .form-group
+        label(for='date1') תאריך
+        input#date1.form-control(name="date" type='date' disabled)
+        input#date2.form-control(name="date" type='hidden')
+      p
+        button.btn.btn-primary(type='submit') שליחת טופס
