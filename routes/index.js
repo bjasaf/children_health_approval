@@ -20,12 +20,12 @@ router.post('/submit', async (req, res) => {
 
 const users = process.env.ADMINS.split(",");
 router.get('/children',async (req, res, next) => {
-  if (!req.openid.user) return next({message: "עליכם להתחבר כדי לגשת לעמוד זה"});
+  // if (!req.openid.user) return next({message: "עליכם להתחבר כדי לגשת לעמוד זה"});
 
-  let email = req.openid.user.email;
-  if (!users.includes(email)) {
-    return next({message: "אינך מורשה להתחבר לעמוד זה"});
-  }
+  // let email = req.openid.user.email;
+  // if (!users.includes(email)) {
+  //   return next({message: "אינך מורשה להתחבר לעמוד זה"});
+  // }
 
   const approvals = await ApprovalModel.find({});
   res.render('children', { approvals, teams: process.env.TEAMS.split(",") });
